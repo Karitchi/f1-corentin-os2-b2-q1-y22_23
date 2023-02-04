@@ -5,9 +5,8 @@
 
 void main(void)
 {
-    int pId, childId, timeOfRace;
+    int pId, timeOfRace;
     const int KEY = 666;
-    int carIds[20] = {44, 63, 1, 11, 55, 16, 4, 3, 14, 31, 10, 22, 5, 18, 6, 23, 77, 24, 47, 9};
     sharedMemory *sharedMemory;
 
     sharedMemory = createSharedMemory(sharedMemory, KEY);
@@ -23,6 +22,9 @@ void main(void)
     // if child process
     if (!pId)
     {
+        int childId;
+        int carIds[20] = {44, 63, 1, 11, 55, 16, 4, 3, 14, 31, 10, 22, 5, 18, 6, 23, 77, 24, 47, 9};
+
         childId = assingChildId(sharedMemory);
         sharedMemory->cars[childId].carId = assignCarId(carIds, childId);
 
