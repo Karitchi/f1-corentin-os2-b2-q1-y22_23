@@ -4,21 +4,54 @@
 #include "struct.h"
 #include <stdlib.h>
 
-void generateChilds(int *pId, int *childId)
+int generateChilds()
 {
+    int pId;
     for (int i = 0; i < 20; i++)
     {
-        *pId = fork();
-
-        if (!*pId)
+        pId = fork();
+        if (!pId)
         {
-            *childId = i;
-            break;
+            return pId;
         }
     }
+    return pId;
+}
+int assingChildId(sharedMemory *sharedMemory)
+{
+    int childId;
+    childId = sharedMemory->childIdSeed;
+    sharedMemory->childIdSeed++;
+    return childId;
+}
+int assignCarId(int carIds[20], int childId)
+{
+    int carId;
+    carId = carIds[childId];
+    return carId;
 }
 
-void *createSharedMemory(void *sharedMemory, const int KEY)
+void swap(int *xp, int *yp)
+{
+    int temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+// void rankCarsOnBestLap(sharedMemory *sharedMemory)
+// {
+
+//     // A function to implement bubble sort
+//     int i, j;
+//     for (i = 0; i < 20 - 1; i++)
+
+//         // Last i elements are already in place
+//         for (j = 0; j < 20 - i - 1; j++)
+//             if (sharedMemory->cars[j].lapTime > sharedMemory->cars[j + 1].lapTime)
+//                 swap(&sharedMemory->cars[j], &sharedMemory->cars[j + 1]);
+// }
+
+void *
+createSharedMemory(void *sharedMemory, const int KEY)
 {
     size_t shmId;
     shmId = shmget(KEY, sizeof(*sharedMemory), IPC_CREAT | 0666);
@@ -69,11 +102,12 @@ int selectRace(void)
 void display(sharedMemory *sharedMemory)
 {
     system("clear");
-    printf("| position | car number | sector 1 | sector 2 | sector 3 | lap time | total time |\n");
+    printf("| position | car id | sector 1 | sector 2 | sector 3 | lap time | total time |\n");
     for (int i = 0; i < 20; i++)
     {
-        printf("[  %2d  ][  %2.2f  ][  %2.2f  ][  %3.2f  ][  %3.2f  ][  %4.2f  ]\n",
+        printf("[  %2d  ][  %2d  ][  %2.2f  ][  %2.2f  ][  %3.2f  ][  %3.2f  ][  %4.2f  ]\n",
                i + 1,
+               sharedMemory->cars[i].carId,
                sharedMemory->cars[i].sectors[0],
                sharedMemory->cars[i].sectors[1],
                sharedMemory->cars[i].sectors[2],

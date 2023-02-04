@@ -3,7 +3,7 @@
 
 float getRandomNumber(sharedMemory *sharedMemory)
 {
-    srand(sharedMemory->seed);
-    sharedMemory->seed++;
+    srand(sharedMemory->randomSeed);
+    sharedMemory->randomSeed++;
     return ((float)rand() / (float)(RAND_MAX)) * 10.0;
 }
