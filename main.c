@@ -1,3 +1,4 @@
+#include <math.h>
 #include "mainProcess.c"
 #include "childProcess.c"
 #include "random.c"
@@ -22,15 +23,16 @@ void main(void)
     // if child process
     if (!pId)
     {
+        float timeLeft = timeOfRace;
         int childId;
         int carIds[20] = {44, 63, 1, 11, 55, 16, 4, 3, 14, 31, 10, 22, 5, 18, 6, 23, 77, 24, 47, 9};
 
         childId = assingChildId(sharedMemory);
         sharedMemory->cars[childId].carId = assignCarId(carIds, childId);
 
-        float timeLeft = timeOfRace;
-
         sharedMemory->cars[childId].totalTime = 0;
+        sharedMemory->cars[childId].bestLap = INFINITY;
+
         while (timeLeft > 0)
         {
             sharedMemory->cars[childId].sectors[0] = getRandomNumber(sharedMemory) + 35;
@@ -39,6 +41,8 @@ void main(void)
 
             sharedMemory->cars[childId].lapTime = getLapTime(sharedMemory, childId);
             sharedMemory->cars[childId].totalTime += sharedMemory->cars[childId].lapTime;
+
+            sharedMemory->cars[childId].bestLap = findBestLap(sharedMemory, childId);
 
             timeLeft = timeLeft - sharedMemory->cars[childId].lapTime;
             sleep(1);

@@ -9,3 +9,12 @@ float getLapTime(sharedMemory *sharedMemory, int childId)
     }
     return lapTime;
 }
+
+float findBestLap(sharedMemory *sharedMemory, int childId)
+{
+    if (sharedMemory->cars[childId].bestLap > sharedMemory->cars[childId].lapTime)
+    {
+        sharedMemory->cars[childId].bestLap = sharedMemory->cars[childId].lapTime;
+    }
+    return sharedMemory->cars[childId].bestLap;
+}

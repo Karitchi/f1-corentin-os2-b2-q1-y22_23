@@ -10,6 +10,7 @@ typedef struct
     {
         float sectors[3];
         float lapTime;
+        float bestLap;
         float totalTime;
         int carId;
     } cars[20];
